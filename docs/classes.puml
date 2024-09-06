@@ -1,0 +1,91 @@
+
+@startuml
+package com.example.workflow {
+
+    class Workflow {
+        Long id
+        String name
+        String originalJson
+        List<Step> steps
+    }
+
+    class Step {
+        Long id
+        Workflow workflow
+        Control control
+    }
+
+    abstract class Control {
+        Long id
+        Service service
+    }
+
+    class AutoControl {
+    }
+
+    class WaitControl {
+    }
+
+    class LoopControl {
+        int loopCount
+        Control nestedControl
+    }
+
+    class IfControl {
+        String condition
+        Control trueControl
+        Control falseControl
+    }
+
+    class Service {
+        Long id
+        String name
+        String url
+        String method
+        String consumes
+        String produces
+        String response
+    }
+
+    class ExecutionFlow {
+        Long id
+        Workflow workflow
+        String globalVariables
+        String localVariables
+        Integer currentStep
+        Date startedAt
+        Date updatedAt
+        String status
+        List<ExecutionHistory> history
+    }
+
+    class ExecutionHistory {
+        Long id
+        ExecutionFlow executionFlow
+        Integer stepNumber
+        Service service
+        byte[] requestData
+        String requestMimeType
+        byte[] responseData
+        String responseMimeType
+        String localVariables
+        String globalVariables
+        Date executedAt
+        String result
+    }
+
+    Workflow --> Step : contains
+    Step --> Control : has
+    Control <|-- AutoControl
+    Control <|-- WaitControl
+    Control <|-- LoopControl
+    Control <|-- IfControl
+    Control --> Service : must execute
+    LoopControl --> Control : repeats
+    IfControl --> Control : true/false paths
+    ExecutionFlow --> Workflow : executes
+    ExecutionFlow --> ExecutionHistory : records
+    ExecutionHistory --> ExecutionFlow : part of
+}
+
+@enduml

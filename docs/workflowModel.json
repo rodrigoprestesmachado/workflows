@@ -1,0 +1,50 @@
+{
+  "workflow": {
+    "name": "Circle of writers",
+    "steps": [
+      {
+        "auto": {
+          "service": { "name": "Create group"}
+        }
+      },
+      {
+        "loop": {
+          "wait": {
+            "service": { "name": "Join group" }
+          },
+          "act": "external"
+        }
+      }
+    ]
+  },
+  "services": [
+    {
+      "name": "Create group",
+      "url": "http://localhost:8080/teams/create",
+      "method": "POST",
+      "consumes": "",
+      "produces": "application/json",
+      "request": {},
+      "response": {
+        "save": {
+          "variable": {
+            "type": "local",
+            "name": "varHashTeam",
+            "path": "hash"
+          }
+        }
+      }
+    },
+    {
+      "name": "Join group",
+      "url": "http://localhost:8080/teams/join",
+      "method": "POST",
+      "consumes": "application/x-www-form-urlencoded",
+      "produces": "application/json",
+      "request": {
+        "hashTeam": "$varHashTeam",
+        "hashUser": "random()"
+      }
+    }
+  ]
+}
