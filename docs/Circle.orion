@@ -1,0 +1,6 @@
+from OrionGroups import all
+
+workflow "Circle of Writers"
+    hashGroup = CreateGroup with user-input
+    loop until signal
+        JoinGroup with hashGroup, user-input

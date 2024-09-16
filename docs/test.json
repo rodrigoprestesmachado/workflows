@@ -1,18 +1,33 @@
 {
   "name": "Circle of Writers",
   "controls": [
-    { "type": "go", "service": "Create group" },
-     { "type": "wait", "service": "Create group" },
-    { "type": "loop", "service": "Create group", "iterations": 2 },
-     { "type": "if", "expression": "x>10", "controls":[
-      { "type": "go", "service": "Create group" },
-      { "type": "wait", "service": "Create group" }
-    ] }
+    { "type": "go", "service": "Create group", "var": { "name": "hashGroup" } },
+    {
+      "type": "loop",
+      "signal": "break",
+      "controls": [
+        {
+          "type": "wait",
+          "service": "Join group",
+          "with": [
+            { "var": "hashGroup" },
+            { "var": "hashUser", "input": "external" }
+          ]
+        }
+      ]
+    }
   ],
   "services": [
     {
       "name": "Create group",
       "url": "http://localhost:8080/teams/create",
+      "method": "POST",
+      "consumes": "application/json",
+      "produces": "application/json"
+    },
+    {
+      "name": "Join group",
+      "url": "http://localhost:8080/teams/join",
       "method": "POST",
       "consumes": "application/json",
       "produces": "application/json"

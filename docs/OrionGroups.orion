@@ -1,0 +1,33 @@
+cloud-binding: {
+    provider: "AWS",
+    function: "createGroupLambda",
+    region: "us-east-1"
+}
+alternative-binding: {
+    provider: "Azure",
+    function: "CreateGroupFunction",
+    region: "East US"
+}
+
+service CreateGroup {
+    port: 8080
+    url: "/teams/create",
+    method: POST,
+    consumes: application/x-www-form-urlencoded,
+    input:{
+        var:name
+    }
+    produces: text/plain,
+}
+
+service JoinGroup {
+    port: 8080,
+    url: "/teams/join",
+    method: POST,
+    consumes: application/x-www-form-urlencoded,
+    input:{
+        var: hashGroup,
+        var: hashUser
+    }
+    produces: application/json
+}
